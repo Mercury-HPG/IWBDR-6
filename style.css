@@ -1,0 +1,557 @@
+/* ECHO Workshop — vanilla stylesheet
+   Single-file port of the React-based design exploration.
+   Replaces the previous style.css. */
+
+:root {
+  --wine-600: #8b1e3f;
+  --page-background: #ececef;
+  --text-color: #1a1a1a;
+  --muted: #666;
+
+  /* Per-tab theme color — set by JS; defaults to wine */
+  --echo-theme: #c9171e;
+  --echo-art-opacity: 1;
+
+  /* Chicago host-city backdrop — tweakable via the Tweaks panel */
+  --chi-sky-top: #8b1e3f;       /* gradient top color (Phoenix maroon) */
+  --chi-photo-top: #a4d1eb;     /* photo top-edge color (blend seam) */
+  --chi-photo-h: 360px;         /* skyline photo band height */
+  --chi-feather: 72px;          /* seam feather (photo top fade) */
+  --chi-card-alpha: 0.7;        /* Chicago card background opacity */
+  --chi-card-blur: 16px;        /* Chicago card backdrop blur */
+
+  /* Footer copyright/credit spacing (all tabs) — tweakable */
+  --footer-pt: 18px;
+  --footer-pb: 12px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Inter, Helvetica, sans-serif;
+  color: var(--text-color);
+  background: var(--page-background);
+  line-height: 1.6;
+}
+
+a { color: inherit; }
+
+.container {
+  width: min(960px, 96%);
+  margin: 0 auto;
+}
+
+/* ------------------------------------------------------------------
+   Background art layer — fixed behind everything
+   ------------------------------------------------------------------ */
+.echo-art {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  color: var(--echo-theme);
+}
+.echo-art .layer {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 420ms cubic-bezier(.22,.61,.36,1);
+  /* Light blur so motifs read atmospheric, not graphic */
+  filter: blur(10px);
+  will-change: transform, opacity;
+}
+.echo-art .layer.active { opacity: var(--echo-art-opacity); }
+.echo-art svg { width: 100%; height: 100%; display: block; }
+
+/* Inner SVG drifts slowly — transform-only, GPU-friendly.
+   Each tab gets a unique keyframe + duration so motion never feels synced. */
+.echo-art .layer > svg {
+  transform-origin: 50% 50%;
+  will-change: transform;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-timing-function: cubic-bezier(.45,.05,.55,.95);
+}
+.echo-art .layer[data-tab="home"]         > svg { animation: echoDriftHome  85s infinite alternate cubic-bezier(.45,.05,.55,.95); }
+.echo-art .layer[data-tab="cfp"]          > svg { animation: echoDriftCFP  110s infinite alternate cubic-bezier(.45,.05,.55,.95); }
+.echo-art .layer[data-tab="organization"] > svg { animation: echoDriftOrg  130s infinite alternate cubic-bezier(.45,.05,.55,.95); }
+.echo-art .layer[data-tab="invited"]      > svg { animation: echoDriftInv  140s infinite alternate cubic-bezier(.45,.05,.55,.95); }
+.echo-art .layer[data-tab="chicago"]      > svg { animation: echoDriftChi  100s infinite alternate cubic-bezier(.45,.05,.55,.95); }
+
+/* Pause drift on hidden layers — saves compositor cycles */
+.echo-art .layer:not(.active) > svg { animation-play-state: paused; }
+
+@keyframes echoDriftHome { from { transform: translate3d(0,0,0)        scale(1);    } to { transform: translate3d(-3%, 2%, 0)   scale(1.06); } }
+@keyframes echoDriftCFP  { from { transform: translate3d(0,0,0)        scale(1);    } to { transform: translate3d(2.5%, -1.5%, 0) scale(1.05); } }
+@keyframes echoDriftOrg  { from { transform: translate3d(-1%, -1%, 0)  scale(1)     rotate(0deg); } to { transform: translate3d(1.5%, 2%, 0) scale(1.04) rotate(.6deg); } }
+@keyframes echoDriftInv  { from { transform: translate3d(0,0,0)        scale(1);    } to { transform: translate3d(0, -1.5%, 0)    scale(1.05); } }
+@keyframes echoDriftChi  { from { transform: translate3d(-2%, 1%, 0)   scale(1.02); } to { transform: translate3d(2.5%, -2%, 0)   scale(1.08); } }
+
+/* ------------------------------------------------------------------
+   Floating shapes — persistent layer above the per-tab motif.
+   Strokes / lines / geometry, blurred and slowly drifting independently.
+   ------------------------------------------------------------------ */
+.echo-shapes {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  color: var(--echo-theme);
+  opacity: .9;
+  filter: blur(12px);
+  transition: color 420ms ease;
+  will-change: transform, opacity;
+}
+.echo-shapes svg { width: 100%; height: 100%; display: block; }
+
+.echo-shape {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  will-change: transform;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-timing-function: cubic-bezier(.45,.05,.55,.95);
+}
+.echo-shape-1  { animation-name: echoShape1;  animation-duration:  62s; }
+.echo-shape-2  { animation-name: echoShape2;  animation-duration:  78s; }
+.echo-shape-3  { animation-name: echoShape3;  animation-duration:  54s; }
+.echo-shape-4  { animation-name: echoShape4;  animation-duration:  96s; }
+.echo-shape-5  { animation-name: echoShape5;  animation-duration:  70s; }
+.echo-shape-6  { animation-name: echoShape6;  animation-duration:  88s; }
+.echo-shape-7  { animation-name: echoShape7;  animation-duration:  46s; }
+.echo-shape-8  { animation-name: echoShape8;  animation-duration: 104s; }
+.echo-shape-9  { animation-name: echoShape9;  animation-duration:  58s; }
+.echo-shape-10 { animation-name: echoShape10; animation-duration:  82s; }
+
+@keyframes echoShape1  { from { transform: translate(0,0)          rotate(0);   } to { transform: translate( 140px,  90px) rotate( 40deg); } }
+@keyframes echoShape2  { from { transform: translate(0,0)          rotate(0);   } to { transform: translate(-180px, -60px) rotate(-30deg); } }
+@keyframes echoShape3  { from { transform: translate(0,0)          rotate(0);   } to { transform: translate( 120px, -80px) rotate( 15deg); } }
+@keyframes echoShape4  { from { transform: translate(0,0)          rotate(0);   } to { transform: translate( -90px, 130px) rotate( 90deg); } }
+@keyframes echoShape5  { from { transform: translate(0,0)          rotate(0);   } to { transform: translate(-160px,  70px) rotate(-25deg); } }
+@keyframes echoShape6  { from { transform: translate(0,0)          rotate(0);   } to { transform: translate(  80px,-110px) rotate( 20deg); } }
+@keyframes echoShape7  { from { transform: translate(0,0)          rotate(0);   } to { transform: translate( 180px, 120px) rotate( 35deg); } }
+@keyframes echoShape8  { from { transform: translate(0,0)          rotate(0);   } to { transform: translate(-130px, -90px) rotate(-60deg); } }
+@keyframes echoShape9  { from { transform: translate(0,0)          rotate(0);   } to { transform: translate(-110px,  60px) rotate(-12deg); } }
+@keyframes echoShape10 { from { transform: translate(0,0)          rotate(0);   } to { transform: translate( 160px,-130px) rotate( 28deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .echo-art .layer > svg,
+  .echo-shape { animation: none !important; }
+}
+
+/* ------------------------------------------------------------------
+   Chicago host-city backdrop
+   Fixed band: a real skyline photo pinned to the bottom of the viewport,
+   with a gradient above it rising from the photo's exact top color
+   (rgb(203 201 216)) up to Chicago flag blue (#41b6e6) at the page top.
+   The flex column makes the gradient→photo seam pixel-exact at any size.
+   ------------------------------------------------------------------ */
+.echo-chicago-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transition: opacity 420ms cubic-bezier(.22,.61,.36,1);
+}
+body.chicago-active .echo-chicago-bg { opacity: 1; }
+
+.echo-chicago-sky {
+  flex: 1 1 auto;
+  min-height: 0;
+  /* Smooth sky = a vertical gradient from the chosen sky color at the page top
+     down to the photo's exact top-edge color (--chi-photo-top) at the seam, so
+     the photo's feathered top dissolves into a matching color with no seam. */
+  background-image:
+    linear-gradient(to bottom, var(--chi-sky-top), var(--chi-photo-top));
+  background-repeat: no-repeat;
+  background-position: top;
+  background-size: 100% 100%;
+}
+.echo-chicago-photo {
+  flex: 0 0 auto;
+  position: relative;
+  /* Pull the photo up so its feathered top overlaps the sky and cross-fades
+     into the extrapolated colors behind it (instead of revealing the page
+     background through the transparent feather). */
+  margin-top: calc(-1 * var(--chi-feather));
+  display: block;
+  width: 100%;
+  height: var(--chi-photo-h);
+  object-fit: cover;
+  object-position: center 18%; /* keep sky + downtown skyline, crop the foreground */
+  /* Feather the top edge so the photo dissolves into the sky behind it. */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 var(--chi-feather));
+          mask-image: linear-gradient(to bottom, transparent 0, #000 var(--chi-feather));
+}
+
+/* Anchor mode: pin the backdrop to the bottom of the WHOLE document
+   (rather than the viewport), so the skyline's bottom sits at the
+   website's bottom. Toggled by the Tweaks panel. */
+body.chi-anchor-page { position: relative; }
+body.chi-anchor-page .echo-chicago-bg { position: absolute; min-height: 100%; }
+
+/* On the Phoenix tab the gradient top is dark maroon, so the hero title and
+   eyebrow are white for legibility — and the banner image is dropped so the
+   live Phoenix backdrop shows through. */
+body.chicago-active .hero {
+  background: transparent;
+  /* No banner here, so don't reserve the banner/credit height. */
+  padding: 20px 0 8px;
+}
+body.chicago-active .hero::before { display: none; }
+body.chicago-active h1 {
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+body.chicago-active .eyebrow {
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Frosted-glass content cards on the Chicago tab so the skyline backdrop
+   reads through them while text stays crisp. */
+body.chicago-active .card {
+  background: rgba(255, 255, 255, var(--chi-card-alpha));
+  -webkit-backdrop-filter: blur(var(--chi-card-blur)) saturate(1.15);
+          backdrop-filter: blur(var(--chi-card-blur)) saturate(1.15);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 8px 30px rgba(31, 60, 80, 0.12);
+}
+
+/* Lift the page content above the art */
+header, nav, main, footer { position: relative; z-index: 1; }
+
+/* ------------------------------------------------------------------
+   Hero
+   ------------------------------------------------------------------ */
+.hero {
+  position: relative;
+  padding: 30px 0 26px;
+  /* Dusk skyline banner with a left-weighted dark scrim so the
+     left-aligned title stays legible. Replaced by the live Chicago
+     backdrop on the Chicago tab (see override below). */
+  background-image:
+    linear-gradient(to right, rgba(8, 16, 32, 0.58), rgba(8, 16, 32, 0.18)),
+    url("assets/Phoenix_skyline.jpg");
+  background-size: cover;
+  background-position: center 40%;
+  background-repeat: no-repeat;
+}
+/* Per-tab theme tint over the banner (duotone wash); follows --echo-theme. */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: var(--echo-theme);
+  mix-blend-mode: multiply;
+  opacity: 0.32;
+  pointer-events: none;
+  transition: background 280ms ease, opacity 280ms ease;
+}
+.hero .container {
+  padding: 0 24px;
+  position: relative;
+  z-index: 1;
+}
+/* Banner photo credit, bottom-right of the header, over the banner.
+   Shown on every tab except Chicago (which has no banner). */
+.hero .banner-credit {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 8px;
+  z-index: 1;
+  margin: 0;
+  width: min(960px, 96%);
+  padding: 0 24px;
+  box-sizing: border-box;
+  text-align: right;
+  font-size: 0.72rem;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+}
+.hero .banner-credit a { color: inherit; text-decoration: underline; }
+body.chicago-active .hero .banner-credit { display: none; }
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.9rem;
+  margin: 0 0 8px;
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.55);
+}
+
+h1 {
+  margin: 0 0 10px;
+  font-size: clamp(1.4rem, 4vw, 2.25rem);
+  font-weight: 900;
+  line-height: 1.1;
+  color: #fff;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+  transition: color 280ms ease;
+}
+
+/* ------------------------------------------------------------------
+   Tab navigation
+   ------------------------------------------------------------------ */
+.nav {
+  background: #fff;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.nav .container {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+  padding: 0 24px;
+}
+.nav .tab {
+  appearance: none;
+  background: transparent;
+  border: none;
+  padding: 16px 14px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-color);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 280ms ease, border-color 280ms ease;
+}
+.nav .tab:hover { color: var(--echo-theme); }
+.nav .tab.active {
+  color: var(--echo-theme);
+  font-weight: 700;
+  border-bottom-color: var(--echo-theme);
+}
+.nav .cta {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: 8px;
+  background: var(--echo-theme);
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: 1px solid var(--echo-theme);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+  transition: background 280ms ease, border-color 280ms ease,
+              box-shadow 200ms ease, filter 160ms ease, transform 120ms cubic-bezier(.22,.61,.36,1);
+}
+.nav .cta:hover {
+  filter: brightness(0.88);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+}
+.nav .cta:active { transform: scale(0.96); }
+
+/* ------------------------------------------------------------------
+   Cards & content
+   ------------------------------------------------------------------ */
+.card {
+  background: #fff;
+  margin: 15px 0;
+  padding: 18px 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+}
+.card > :last-child { margin-bottom: 0; }
+
+h2 {
+  margin-top: 0;
+  margin-bottom: 6px;
+  color: var(--echo-theme);
+  transition: color 280ms ease;
+}
+h3 {
+  margin-top: 0;
+  margin-bottom: 4px;
+  color: var(--echo-theme);
+  transition: color 280ms ease;
+}
+p { margin-top: 0; margin-bottom: 12px; }
+
+ul { padding-left: 20px; }
+
+/* Tab content fade-in on switch */
+.tab-pane { display: none; }
+.tab-pane.active {
+  display: block;
+  animation: echoTabIn 240ms cubic-bezier(.22,.61,.36,1) both;
+}
+@keyframes echoTabIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* TBD block on Invited Talk */
+.tbd-block {
+  padding: 56px 24px;
+  text-align: center;
+  color: var(--muted);
+}
+.tbd-block .big {
+  font-size: 1.4rem;
+  color: var(--text-color);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+/* Small muted note used in the Chicago tab's disclaimer card */
+.muted-note { color: var(--muted); font-size: .92rem; margin: 0; }
+
+/* ------------------------------------------------------------------
+   Modal — submission portal instructions
+   ------------------------------------------------------------------ */
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(26,26,26,0.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+.modal-backdrop.open { display: flex; }
+.modal {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+  width: min(520px, 92%);
+  padding: 24px 28px;
+}
+.modal h3 {
+  margin: 0 0 14px;
+  color: var(--echo-theme);
+  font-size: 1.2rem;
+}
+.modal ol {
+  padding-left: 22px;
+  margin: 0 0 18px;
+  line-height: 1.7;
+}
+.modal a { color: var(--echo-theme); }
+.modal-actions { display: flex; gap: 12px; justify-content: flex-end; }
+
+.btn {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--echo-theme);
+  border: 1px solid var(--echo-theme);
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+.btn.primary {
+  background: var(--echo-theme);
+  color: #fff;
+}
+
+/* ------------------------------------------------------------------
+   Footer
+   ------------------------------------------------------------------ */
+.footer {
+  padding: var(--footer-pt, 18px) 0 var(--footer-pb, 12px);
+  color: var(--muted);
+}
+.footer .container { padding: 0 24px; }
+/* Copyright left, photo credit pushed to the right (\hfill-style). */
+.footer-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px 20px;
+  flex-wrap: wrap;
+}
+.footer .copyright { margin: 0; }
+.footer .photo-credit {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-align: right;
+  display: none; /* only the credit matching the current tab is shown */
+}
+.footer .photo-credit a { text-decoration: underline; }
+
+/* Chicago skyline-photo credit shows only on the Chicago tab. */
+body.chicago-active .footer .photo-credit.chi { display: block; }
+
+/* On the Chicago tab the footer sits over the skyline photo: show the credit
+   and switch the footer text to white (with a soft shadow for legibility). */
+body.chicago-active .footer .copyright,
+body.chicago-active .footer .photo-credit,
+body.chicago-active .footer .photo-credit a {
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* ------------------------------------------------------------------
+   Tweaks panel (dev/host only — hidden in production; shown when the
+   Tweaks toolbar toggle posts __activate_edit_mode). Pure vanilla, no deps.
+   ------------------------------------------------------------------ */
+.echo-tweaks {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 100;
+  width: 280px;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  background: #1b1d22;
+  color: #e8e8ea;
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 14px;
+  box-shadow: 0 18px 50px rgba(0,0,0,0.45);
+  font-family: Inter, Helvetica, sans-serif;
+  font-size: 13px;
+  padding: 0 0 14px;
+  user-select: none;
+}
+.echo-tweaks header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  position: sticky; top: 0; background: #1b1d22; border-radius: 14px 14px 0 0;
+  cursor: grab;
+}
+.echo-tweaks header.dragging { cursor: grabbing; }
+.echo-tweaks header h4 { margin: 0; font-size: 13px; font-weight: 700; letter-spacing: .02em; }
+.echo-tweaks .x {
+  appearance: none; border: none; background: transparent; color: #9a9aa2;
+  font-size: 18px; line-height: 1; cursor: pointer; padding: 2px 6px; border-radius: 6px;
+}
+.echo-tweaks .x:hover { background: rgba(255,255,255,0.08); color: #fff; }
+.echo-tweaks .sect {
+  padding: 12px 14px 4px; font-size: 11px; text-transform: uppercase;
+  letter-spacing: .08em; color: #8a8a93; font-weight: 700;
+}
+.echo-tweaks .row { padding: 7px 14px; }
+.echo-tweaks .row label { display: block; margin-bottom: 6px; color: #cfcfd6; }
+.echo-tweaks .row .val { color: #8ad0f0; font-variant-numeric: tabular-nums; }
+.echo-tweaks input[type="range"] { width: 100%; accent-color: #41b6e6; }
+.echo-tweaks .swatches { display: flex; gap: 8px; }
+.echo-tweaks .swatch {
+  width: 28px; height: 28px; border-radius: 8px; cursor: pointer;
+  border: 2px solid transparent; box-shadow: 0 0 0 1px rgba(255,255,255,0.15) inset;
+}
+.echo-tweaks .swatch.sel { border-color: #fff; }
+.echo-tweaks .seg { display: flex; gap: 4px; background: #2a2d34; padding: 3px; border-radius: 9px; }
+.echo-tweaks .seg button {
+  flex: 1; appearance: none; border: none; background: transparent; color: #cfcfd6;
+  padding: 6px 4px; border-radius: 7px; cursor: pointer; font: inherit; font-size: 12px;
+}
+.echo-tweaks .seg button.sel { background: #41b6e6; color: #06222e; font-weight: 700; }
