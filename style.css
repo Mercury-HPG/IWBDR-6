@@ -242,7 +242,7 @@ header, nav, main, footer { position: relative; z-index: 1; }
    ------------------------------------------------------------------ */
 .hero {
   position: relative;
-  padding: 30px 0 26px;
+  padding: 20px 0 26px;
   /* Dusk skyline banner (--hero-banner, set per site) with a left-weighted
      dark scrim so the left-aligned title stays legible. Dropped on the city
      tab so the live backdrop shows through (see override below). */
