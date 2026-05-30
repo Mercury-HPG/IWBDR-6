@@ -5,18 +5,33 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="color-scheme" content="light" />
-  <meta name="theme-color" content="rgb(139 30 63)" />
+  <meta name="theme-color" content="#9c1217" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="IWBDR-6" />
   <link rel="manifest" href="manifest.json" />
-  <!-- Favicon/app icons disabled until new assets are added.
   <link rel="apple-touch-icon" href="assets/icon-192.png" />
   <link rel="icon" href="assets/icon-192.png" />
-  -->
-  <link rel="icon" href="data:," />
   <title>IWBDR-6</title>
   <link rel="stylesheet" href="style.css" />
+  <!-- Per-site host-city backdrop config. Everything else is shared:
+       style.css is kept byte-identical across the IWBDR and ECHO sites. -->
+  <style>
+    :root {
+      --chi-sky-top: #8b1e3f;       /* Phoenix maroon */
+      --chi-photo-top: #a4d1eb;     /* aerial photo top-edge color */
+      --chi-sky-bg: linear-gradient(to bottom, var(--chi-sky-top), var(--chi-photo-top));
+      --chi-sky-repeat: no-repeat;
+      --chi-sky-pos: top;
+      --chi-sky-size: 100% 100%;
+      --chi-photo-pos: center 18%;
+      --chi-h1-color: #ffffff;
+      --chi-h1-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+      --chi-eyebrow-color: rgba(255, 255, 255, 0.9);
+      --chi-eyebrow-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+      --hero-banner: url("assets/Phoenix_skyline.jpg");
+    }
+  </style>
 </head>
 
 <body>
@@ -551,8 +566,41 @@
       var layers = document.querySelectorAll('.echo-art .layer');
       var root   = document.documentElement;
 
+      // Safari tints its toolbar/UI from <meta name="theme-color">. Bright
+      // theme colors (e.g. a light blue) make a garish toolbar with awkward
+      // contrast; dark ones (the maroon) look like intentional chrome. So we
+      // derive a deep, Safari-friendly shade per tab: cap HSL lightness so
+      // every toolbar is dark enough for legible light UI text. Already-dark
+      // themes (maroon, near-black) pass through unchanged.
+      var themeMeta = document.querySelector('meta[name="theme-color"]');
+      function chromeColor(hex) {
+        var m = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex);
+        if (!m) return hex;
+        var r = parseInt(m[1], 16) / 255, g = parseInt(m[2], 16) / 255, b = parseInt(m[3], 16) / 255;
+        var max = Math.max(r, g, b), min = Math.min(r, g, b), l = (max + min) / 2, h = 0, s = 0, d = max - min;
+        if (d) {
+          s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+          if (max === r) h = (g - b) / d + (g < b ? 6 : 0);
+          else if (max === g) h = (b - r) / d + 2;
+          else h = (r - g) / d + 4;
+          h /= 6;
+        }
+        l = Math.min(l, 0.34); // cap lightness → always a deep, legible tint
+        function hue(p, q, t) { if (t < 0) t += 1; if (t > 1) t -= 1; if (t < 1 / 6) return p + (q - p) * 6 * t; if (t < 1 / 2) return q; if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6; return p; }
+        var rr, gg, bb;
+        if (!s) { rr = gg = bb = l; }
+        else { var q = l < 0.5 ? l * (1 + s) : l + s - l * s, p = 2 * l - q; rr = hue(p, q, h + 1 / 3); gg = hue(p, q, h); bb = hue(p, q, h - 1 / 3); }
+        function hx(v) { v = Math.round(v * 255); return (v < 16 ? '0' : '') + v.toString(16); }
+        return '#' + hx(rr) + hx(gg) + hx(bb);
+      }
+      function setThemeColor(hex) {
+        if (!themeMeta) { themeMeta = document.createElement('meta'); themeMeta.setAttribute('name', 'theme-color'); document.head.appendChild(themeMeta); }
+        themeMeta.setAttribute('content', chromeColor(hex || '#8b1e3f'));
+      }
+
       function setTab(id) {
         root.style.setProperty('--echo-theme', THEMES[id] || '#8b1e3f');
+        setThemeColor(THEMES[id]);
         document.body.classList.toggle('chicago-active', id === 'chicago');
         try { localStorage.setItem('echoTab', id); } catch (e) {}
         tabs.forEach(function (t) {
@@ -586,6 +634,13 @@
         var savedTab = localStorage.getItem('echoTab');
         if (savedTab && THEMES[savedTab]) { setTab(savedTab); }
       } catch (e) {}
+
+      // Set the Safari toolbar tint for the initially-active tab on first load
+      // (when there is no saved tab, setTab above isn't called).
+      (function () {
+        var active = document.querySelector('.nav .tab.active');
+        setThemeColor(THEMES[active ? active.dataset.tab : 'home']);
+      })();
 
       // CFP background lines — generated to fill full height
       (function () {

@@ -4,7 +4,20 @@
   "start_url": ".",
   "display": "standalone",
   "background_color": "#f7f7f8",
-  "theme_color": "rgb(139 30 63)",
+  "theme_color": "#8b1e3f",
   "description": "The 6th International Workshop on Big Data Reduction, in conjunction with IEEE BigData 2026, Phoenix, Arizona, USA.",
-  "icons": []
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
 }
