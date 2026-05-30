@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light" />
+  <meta name="theme-color" content="#9c1217" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="IWBDR-6" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="assets/icon-192.png" />
+  <link rel="icon" href="assets/icon-192.png" />
+  <title>IWBDR-6</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Per-site host-city backdrop config. Everything else is shared:
+       style.css is kept byte-identical across the IWBDR and ECHO sites. -->
+  <style>
+    :root {
+      --chi-sky-top: #8b1e3f;
+      /* Phoenix maroon */
+      --chi-photo-top: #a4d1eb;
+      /* aerial photo top-edge color */
+      --chi-sky-bg: linear-gradient(to bottom, var(--chi-sky-top), var(--chi-photo-top));
+      --chi-sky-repeat: no-repeat;
+      --chi-sky-pos: top;
+      --chi-sky-size: 100% 100%;
+      --chi-photo-pos: center 18%;
+      --chi-h1-color: #ffffff;
+      --chi-h1-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+      --chi-eyebrow-color: rgba(255, 255, 255, 0.9);
+      --chi-eyebrow-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+      --hero-banner: url("assets/Phoenix_skyline.jpg");
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ============================================================
+       Background art — one SVG per tab, JS toggles .active
+       ============================================================ -->
+  <div class="echo-art" id="echoArt" aria-hidden="true">
+
+    <!-- Home: concentric echo ripples -->
+    <div class="layer active" data-tab="home">
+      <svg viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="g-home" cx="92%" cy="12%" r="55%">
+            <stop offset="0%" stop-color="currentColor" stop-opacity="0.16" />
+            <stop offset="55%" stop-color="currentColor" stop-opacity="0.04" />
+            <stop offset="100%" stop-color="currentColor" stop-opacity="0" />
+          </radialGradient>
+        </defs>
+        <rect width="1600" height="1000" fill="url(#g-home)" />
+        <g fill="none" stroke="currentColor" stroke-width="1.2">
+          <circle cx="1520" cy="-80" r="260" stroke-opacity="0.140" />
+          <circle cx="1520" cy="-80" r="420" stroke-opacity="0.128" />
+          <circle cx="1520" cy="-80" r="580" stroke-opacity="0.116" />
+          <circle cx="1520" cy="-80" r="760" stroke-opacity="0.104" />
+          <circle cx="1520" cy="-80" r="960" stroke-opacity="0.092" />
+          <circle cx="1520" cy="-80" r="1180" stroke-opacity="0.080" />
+          <circle cx="1520" cy="-80" r="1420" stroke-opacity="0.068" />
+        </g>
+        <g fill="none" stroke="currentColor" stroke-width="1">
+          <circle cx="-80" cy="1080" r="300" stroke-opacity="0.080" />
+          <circle cx="-80" cy="1080" r="460" stroke-opacity="0.068" />
+          <circle cx="-80" cy="1080" r="640" stroke-opacity="0.056" />
+          <circle cx="-80" cy="1080" r="840" stroke-opacity="0.044" />
+        </g>
+      </svg>
+    </div>
+
+    <!-- Call for Papers: paper-stripe lines + sweeping arcs -->
+    <div class="layer" data-tab="cfp">
+      <svg viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="g-cfp" cx="8%" cy="92%" r="55%">
+            <stop offset="0%" stop-color="currentColor" stop-opacity="0.12" />
+            <stop offset="100%" stop-color="currentColor" stop-opacity="0" />
+          </radialGradient>
+        </defs>
+        <rect width="1600" height="1000" fill="url(#g-cfp)" />
+        <g id="cfp-lines" stroke="currentColor" stroke-width="2" stroke-linecap="round"></g>
+        <path d="M -100 720 C 400 540, 1100 540, 1700 320" fill="none" stroke="currentColor" stroke-opacity="0.18"
+          stroke-width="1.5" />
+        <path d="M -100 880 C 400 720, 1100 720, 1700 520" fill="none" stroke="currentColor" stroke-opacity="0.10"
+          stroke-width="1.5" />
+      </svg>
+    </div>
+
+    <!-- Organization: sparse network graph -->
+    <div class="layer" data-tab="organization">
+      <svg viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="g-org" cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stop-color="currentColor" stop-opacity="0.10" />
+            <stop offset="100%" stop-color="currentColor" stop-opacity="0" />
+          </radialGradient>
+        </defs>
+        <rect width="1600" height="1000" fill="url(#g-org)" />
+        <g stroke="currentColor" stroke-opacity="0.16" stroke-width="0.9" fill="none">
+          <line x1="180" y1="200" x2="380" y2="120" />
+          <line x1="180" y1="200" x2="120" y2="380" />
+          <line x1="380" y1="120" x2="560" y2="260" />
+          <line x1="380" y1="120" x2="760" y2="170" />
+          <line x1="560" y1="260" x2="940" y2="300" />
+          <line x1="560" y1="260" x2="660" y2="540" />
+          <line x1="760" y1="170" x2="940" y2="300" />
+          <line x1="940" y1="300" x2="1180" y2="200" />
+          <line x1="1180" y1="200" x2="1380" y2="360" />
+          <line x1="1180" y1="200" x2="900" y2="580" />
+          <line x1="1380" y1="360" x2="1480" y2="540" />
+          <line x1="1480" y1="540" x2="1280" y2="700" />
+          <line x1="1280" y1="700" x2="1020" y2="780" />
+          <line x1="1020" y1="780" x2="740" y2="820" />
+          <line x1="1020" y1="780" x2="900" y2="580" />
+          <line x1="740" y1="820" x2="460" y2="720" />
+          <line x1="460" y1="720" x2="220" y2="580" />
+          <line x1="220" y1="580" x2="120" y2="380" />
+          <line x1="220" y1="580" x2="660" y2="540" />
+          <line x1="660" y1="540" x2="900" y2="580" />
+          <line x1="940" y1="300" x2="760" y2="170" />
+        </g>
+        <g fill="currentColor" fill-opacity="0.22">
+          <circle cx="180" cy="200" r="5" />
+          <circle cx="380" cy="120" r="3" />
+          <circle cx="560" cy="260" r="3" />
+          <circle cx="760" cy="170" r="3" />
+          <circle cx="940" cy="300" r="5" />
+          <circle cx="1180" cy="200" r="3" />
+          <circle cx="1380" cy="360" r="3" />
+          <circle cx="1480" cy="540" r="3" />
+          <circle cx="1280" cy="700" r="5" />
+          <circle cx="1020" cy="780" r="3" />
+          <circle cx="740" cy="820" r="3" />
+          <circle cx="460" cy="720" r="3" />
+          <circle cx="220" cy="580" r="5" />
+          <circle cx="120" cy="380" r="3" />
+          <circle cx="660" cy="540" r="3" />
+          <circle cx="900" cy="580" r="3" />
+        </g>
+        <g fill="none" stroke="currentColor" stroke-opacity="0.10">
+          <circle cx="560" cy="260" r="40" />
+          <circle cx="560" cy="260" r="68" />
+          <circle cx="1020" cy="780" r="40" />
+          <circle cx="1020" cy="780" r="68" />
+        </g>
+      </svg>
+    </div>
+
+    <!-- Invited Talk: quiet halo + TBD dots -->
+    <div class="layer" data-tab="invited">
+      <svg viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="g-inv" cx="50%" cy="42%" r="45%">
+            <stop offset="0%" stop-color="currentColor" stop-opacity="0.16" />
+            <stop offset="55%" stop-color="currentColor" stop-opacity="0.04" />
+            <stop offset="100%" stop-color="currentColor" stop-opacity="0" />
+          </radialGradient>
+        </defs>
+        <rect width="1600" height="1000" fill="url(#g-inv)" />
+        <g stroke="currentColor" stroke-width="1">
+          <line x1="0" y1="640" x2="1600" y2="640" stroke-opacity="0.10" />
+          <line x1="0" y1="662" x2="1600" y2="662" stroke-opacity="0.04" />
+        </g>
+        <g fill="currentColor" fill-opacity="0.18">
+          <circle cx="760" cy="400" r="6" />
+          <circle cx="800" cy="400" r="6" />
+          <circle cx="840" cy="400" r="6" />
+        </g>
+        <g fill="none" stroke="currentColor" stroke-opacity="0.06">
+          <circle cx="800" cy="400" r="160" />
+          <circle cx="800" cy="400" r="260" />
+        </g>
+      </svg>
+    </div>
+
+    <!-- Past Events: horizontal timeline with nodes -->
+    <div class="layer" data-tab="past">
+      <svg viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="g-past" cx="50%" cy="30%" r="55%">
+            <stop offset="0%" stop-color="currentColor" stop-opacity="0.12" />
+            <stop offset="100%" stop-color="currentColor" stop-opacity="0" />
+          </radialGradient>
+        </defs>
+        <rect width="1600" height="1000" fill="url(#g-past)" />
+        <g stroke="currentColor" stroke-opacity="0.16" stroke-width="1.4">
+          <line x1="140" y1="500" x2="1460" y2="500" />
+        </g>
+        <g fill="currentColor" fill-opacity="0.20">
+          <circle cx="260" cy="500" r="7" />
+          <circle cx="540" cy="500" r="7" />
+          <circle cx="820" cy="500" r="7" />
+          <circle cx="1100" cy="500" r="7" />
+          <circle cx="1380" cy="500" r="7" />
+        </g>
+        <g stroke="currentColor" stroke-opacity="0.10" stroke-width="1">
+          <line x1="260" y1="430" x2="260" y2="500" />
+          <line x1="540" y1="500" x2="540" y2="570" />
+          <line x1="820" y1="430" x2="820" y2="500" />
+          <line x1="1100" y1="500" x2="1100" y2="570" />
+          <line x1="1380" y1="430" x2="1380" y2="500" />
+        </g>
+      </svg>
+    </div>
+
+    <!-- Chicago: soft overlapping ovals + flowing sine bands (sky/lake) -->
+    <div class="layer" data-tab="chicago">
+      <svg viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="g-chi-a" cx="22%" cy="28%" r="58%">
+            <stop offset="0%" stop-color="currentColor" stop-opacity="0.20" />
+            <stop offset="100%" stop-color="currentColor" stop-opacity="0" />
+          </radialGradient>
+          <radialGradient id="g-chi-b" cx="82%" cy="78%" r="55%">
+            <stop offset="0%" stop-color="currentColor" stop-opacity="0.16" />
+            <stop offset="100%" stop-color="currentColor" stop-opacity="0" />
+          </radialGradient>
+        </defs>
+        <rect width="1600" height="1000" fill="url(#g-chi-a)" />
+        <rect width="1600" height="1000" fill="url(#g-chi-b)" />
+        <g fill="currentColor">
+          <ellipse cx="380" cy="260" rx="420" ry="240" fill-opacity="0.09" />
+          <ellipse cx="1240" cy="720" rx="460" ry="280" fill-opacity="0.09" />
+          <ellipse cx="900" cy="380" rx="280" ry="160" fill-opacity="0.06" />
+          <ellipse cx="520" cy="780" rx="240" ry="140" fill-opacity="0.05" />
+        </g>
+        <g stroke="currentColor" fill="none" stroke-width="1.5" stroke-linecap="round">
+          <path d="M -120 180 C 300 110, 700 250, 1100 222 S 1600 152, 1820 180" stroke-opacity="0.18" />
+          <path d="M -120 300 C 300 360, 700 240, 1100 336 S 1600 276, 1820 300" stroke-opacity="0.14" />
+          <path d="M -120 430 C 300 380, 700 480, 1100 460 S 1600 410, 1820 430" stroke-opacity="0.12" />
+          <path d="M -120 560 C 300 640, 700 480, 1100 608 S 1600 528, 1820 560" stroke-opacity="0.16" />
+          <path d="M -120 700 C 300 640, 700 760, 1100 736 S 1600 676, 1820 700" stroke-opacity="0.12" />
+          <path d="M -120 830 C 300 900, 700 760, 1100 872 S 1600 802, 1820 830" stroke-opacity="0.10" />
+        </g>
+      </svg>
+    </div>
+
+  </div>
+
+  <!-- ============================================================
+       Floating shapes — persistent layer above the per-tab motif
+       (strokes / lines / geometry, blurred + drifting; uses currentColor
+       so it picks up the active theme via --echo-theme)
+       ============================================================ -->
+  <div class="echo-shapes" aria-hidden="true">
+    <svg viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <g class="echo-shape echo-shape-1" stroke="currentColor" fill="none" stroke-width="1.6" stroke-opacity="0.30">
+        <circle cx="240" cy="220" r="120" />
+      </g>
+      <g class="echo-shape echo-shape-2" fill="currentColor" fill-opacity="0.22">
+        <polygon points="1280,360 1360,500 1200,500" />
+      </g>
+      <g class="echo-shape echo-shape-3" stroke="currentColor" stroke-width="2" stroke-opacity="0.26"
+        stroke-linecap="round">
+        <line x1="60" y1="780" x2="520" y2="540" />
+      </g>
+      <g class="echo-shape echo-shape-4" stroke="currentColor" fill="none" stroke-width="1.4" stroke-opacity="0.28">
+        <rect x="-55" y="-55" width="110" height="110" transform="translate(900 760)" />
+      </g>
+      <g class="echo-shape echo-shape-5" stroke="currentColor" fill="none" stroke-width="1.4" stroke-opacity="0.32">
+        <circle cx="1420" cy="160" r="58" />
+      </g>
+      <g class="echo-shape echo-shape-6" stroke="currentColor" fill="none" stroke-width="1.6" stroke-opacity="0.24"
+        stroke-linecap="round">
+        <path d="M 640 880 Q 780 760, 1020 820" />
+      </g>
+      <g class="echo-shape echo-shape-7" fill="currentColor" fill-opacity="0.32">
+        <circle cx="180" cy="540" r="5" />
+        <circle cx="210" cy="568" r="3" />
+        <circle cx="238" cy="538" r="4" />
+        <circle cx="200" cy="600" r="3" />
+      </g>
+      <g class="echo-shape echo-shape-8" stroke="currentColor" fill="none" stroke-width="1.4" stroke-opacity="0.26">
+        <polygon points="0,-60 52,-30 52,30 0,60 -52,30 -52,-30" transform="translate(720 280)" />
+      </g>
+      <g class="echo-shape echo-shape-9" stroke="currentColor" stroke-width="2" stroke-opacity="0.30"
+        stroke-linecap="round">
+        <line x1="1100" y1="80" x2="1140" y2="80" />
+        <line x1="1100" y1="100" x2="1160" y2="100" />
+        <line x1="1100" y1="120" x2="1130" y2="120" />
+      </g>
+      <g class="echo-shape echo-shape-10" stroke="currentColor" stroke-width="1.4" stroke-opacity="0.22"
+        stroke-linecap="round">
+        <line x1="1140" y1="900" x2="1480" y2="720" />
+      </g>
+    </svg>
+  </div>
+
+  <!-- ============================================================
+       Chicago host-city backdrop — fixed photo band at the bottom with
+       a gradient rising from the photo's top color to Chicago blue.
+       Shown only when the Chicago tab is active (body.chicago-active).
+       ============================================================ -->
+  <div class="echo-chicago-bg" aria-hidden="true">
+    <div class="echo-chicago-sky"></div>
+    <img class="echo-chicago-photo" src="assets/Phoenix_AZ_Downtown_from_airplane.jpg" alt="" />
+  </div>
+
+  <!-- ============================================================
+       Hero
+       ============================================================ -->
+  <header class="hero">
+    <div class="container">
+      <p class="eyebrow">Workshop • Dec. 14–17, 2026 • In conjunction with <a
+          href="https://bigdataieee.org/BigData2026/" target="_blank" rel="noopener"
+          style="color: inherit; text-decoration: underline;">IEEE BigData 2026</a>, Phoenix, Arizona, USA</p>
+      <h1>IWBDR-6: The 6th International Workshop on Big Data Reduction</h1>
+    </div>
+    <p class="banner-credit">Banner photo: "<a href="https://commons.wikimedia.org/wiki/File:Phoenix_skyline.jpg"
+        target="_blank" rel="noopener">Phoenix skyline</a>" by M S / <a
+        href="https://commons.wikimedia.org/wiki/File:Phoenix_skyline.jpg" target="_blank" rel="noopener">Wikimedia
+        Commons</a>, <a href="https://creativecommons.org/licenses/by/2.0" target="_blank" rel="noopener">CC BY 2.0</a>
+    </p>
+  </header>
+
+  <!-- ============================================================
+       Tab nav
+       ============================================================ -->
+  <nav class="nav">
+    <div class="container">
+      <button class="tab active" data-tab="home">Home</button>
+      <button class="tab" data-tab="cfp">Call for Papers</button>
+      <button class="tab" data-tab="organization">Organization</button>
+      <button class="tab" data-tab="invited">Invited Talk</button>
+      <button class="tab" data-tab="past">Past Events</button>
+      <button class="tab" data-tab="chicago">Phoenix</button>
+      <a class="cta"
+        href="https://wi-lab.com/cyberchair/2026/bigdata26/scripts/submit.php?subarea=S58&amp;undisplay_detail=1&amp;wh=/cyberchair/2026/bigdata26/scripts/ws_submit.php"
+        id="submitBtn">Go to Submission</a>
+    </div>
+  </nav>
+
+  <!-- ============================================================
+       Tab content
+       ============================================================ -->
+  <main class="container">
+
+    <section class="tab-pane active" data-tab="home">
+      <div class="card">
+        <h2>About the Workshop</h2>
+        <p>Modern applications span high-performance computing (HPC), cloud, edge, and Internet-of-Things (IoT)
+          platforms. Across all of them, data volumes have grown to strain storage, I/O, communication, and energy
+          budgets at every layer of the system. Data reduction has become indispensable in this regime: it can shrink
+          data by one or even two orders of magnitude, with a large downstream payoff in reduced memory and storage
+          pressure, fewer I/O bottlenecks, shorter communication time, and better energy efficiency in parallel and
+          distributed environments.</p>
+        <p>The pressure is acute across the computing landscape. Exascale systems such as Frontier, Aurora, and El
+          Capitan produce simulation outputs orders of magnitude larger than available storage, while light sources,
+          telescopes, and particle detectors stream raw measurements faster than disks and networks can ingest them.
+          AI/ML training corpora and foundation-model checkpoints now reach tens to hundreds of terabytes per run, and
+          energy-constrained IoT and edge deployments must compress sensor streams in real time within strict power,
+          memory, and bandwidth budgets. IWBDR-6 brings the data-reduction community together to share results, identify
+          new directions, and build collaborations around three research pillars: reduction ratio at scale, the
+          accuracy-performance trade-off, and information preservation.</p>
+      </div>
+      <div class="card">
+        <h2>Workshop Format</h2>
+        <p>IWBDR-6 will be organized as a <strong>hybrid</strong> workshop, supporting both in-person attendance in
+          <strong>Phoenix, Arizona</strong> and remote participation through a managed virtual meeting platform. It
+          continues a well-established series: the 1st through 5th editions were held in conjunction with IEEE BigData
+          2020, 2021, 2022, 2023, and 2025, respectively.
+        </p>
+        <p>Following IWBDR convention, the program features one distinguished keynote speaker drawn from national
+          laboratories, leading research universities, and industry, alongside peer-reviewed paper presentations. Each
+          submission receives at least three single-blind reviews from the Program Committee, and the workshop accepts
+          at least six regular papers to fill a full session.</p>
+      </div>
+      <div class="card">
+        <h2>Important Dates</h2>
+        <ul>
+          <li>Full paper submission deadline: October 30, 2026 (Friday)</li>
+          <li>Author notification: November 13, 2026 (Friday)</li>
+          <li>Camera-ready deadline: November 23, 2026</li>
+          <li>IWBDR-6 workshop: December 14–17, 2026 (the specific date is to be announced)</li>
+        </ul>
+        <p class="muted-note">Dates are tentative and will be finalized in alignment with the IEEE BigData 2026 workshop
+          track.</p>
+      </div>
+    </section>
+
+    <section class="tab-pane" data-tab="cfp">
+      <div class="card">
+        <h2>Call for Papers</h2>
+        <p>We invite original submissions on data reduction for big data across high-performance computing, cloud, edge,
+          and IoT platforms, spanning algorithms, mathematics, system software, hardware co-design, and
+          application-driven methods. IWBDR-6 targets IEEE BigData attendees facing data-volume bottlenecks across HPC
+          simulations, AI/ML pipelines, cloud and edge analytics, and experimental facilities, where reduction-specific
+          techniques such as error-bounded lossy compression, progressive reduction, and neural-hybrid encoders are
+          rarely covered in depth.</p>
+
+        <h3>Topics of Interest</h3>
+        <p>The research topics covered by IWBDR-6 include, but are not limited to:</p>
+        <p><strong>Data reduction techniques</strong> for big data issues in high-performance computing (HPC), cloud
+          computing, Internet-of-Things (IoT), edge computing, machine learning and deep learning, and other big data
+          areas:</p>
+        <ul>
+          <li>Lossy and lossless compression methods</li>
+          <li>Approximate computation methods</li>
+          <li>Compressive/compressed sensing methods</li>
+          <li>Reduction methods for unstructured data</li>
+          <li>Tensor decomposition methods</li>
+          <li>Data deduplication methods</li>
+          <li>Domain/motif-specific methods, such as (un)structured meshes, particles, tensors</li>
+          <li>Accuracy-guarantee data reduction methods</li>
+          <li>Optimal design of data reduction methods</li>
+          <li>Progressive data reduction methods</li>
+          <li>Methods to provide reduced models/representations</li>
+        </ul>
+        <p>Additional topics of interest:</p>
+        <ul>
+          <li>Mathematical methods with provable error bounds on data and quantities of interest</li>
+          <li>Metrics and infrastructures to evaluate reduction methods and assess quality/fidelity of reduced data</li>
+          <li>Uncertainty quantification for reduction methods/models/representations</li>
+          <li>Benchmark applications and datasets for big data reduction</li>
+          <li>Data analysis and visualization techniques leveraging reduced data</li>
+          <li>Characterizing the impact of data reduction techniques on applications</li>
+          <li>Hardware-software co-design of data reduction</li>
+          <li>Trade-offs between accuracy &amp; performance on emerging computing hardware and platforms</li>
+          <li>Resource-constrained and/or time-constrained data reduction methods</li>
+          <li>Software, tools, and programming models for managing reduced data</li>
+          <li>Runtime systems and supports for data reduction</li>
+          <li>Development of composable data reduction pipelines/workflows</li>
+          <li>Automation of data reduction in scientific workflows</li>
+          <li>Data reduction challenges and solutions in observational and experimental environments</li>
+        </ul>
+
+        <h3>Submission</h3>
+        <p>Full workshop papers are submitted through the <a
+            href="https://wi-lab.com/cyberchair/2026/bigdata26/scripts/submit.php?subarea=S58&amp;undisplay_detail=1&amp;wh=/cyberchair/2026/bigdata26/scripts/ws_submit.php"
+            target="_blank" rel="noopener">IWBDR-6 submission portal</a>. Each paper receives at least three
+          single-blind reviews from the Program Committee. At least one author of every accepted paper must register
+          and present (in person or virtually).</p>
+
+        <h3>Important Dates</h3>
+        <ul>
+          <li>Full paper submission deadline: October 30, 2026 (Friday)</li>
+          <li>Author notification: November 13, 2026 (Friday)</li>
+          <li>Camera-ready deadline: November 23, 2026</li>
+          <li>IWBDR-6 workshop: December 14–17, 2026</li>
+        </ul>
+        <p class="muted-note">Dates are tentative and will be finalized in alignment with the IEEE BigData 2026 workshop
+          track.</p>
+      </div>
+    </section>
+
+    <section class="tab-pane" data-tab="organization">
+      <div class="card">
+        <h2>Program Chairs</h2>
+        <ul>
+          <li><b>Jiannan Tian</b>, Oakland University, United States</li>
+          <li><b>Daoce Wang</b> (Co-Chair), University of Nebraska Omaha, United States</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>Program Committee</h2>
+        <p>The list is sorted alphabetically by last name.</p>
+        <ul>
+          <li><b>Allison Baker</b>, National Center for Atmospheric Research, United States</li>
+          <li><b>Martin Burtscher</b>, Texas State University, United States</li>
+          <li><b>Jon Calhoun</b>, Clemson University, United States</li>
+          <li><b>Franck Cappello</b>, Argonne National Laboratory, United States</li>
+          <li><b>Jieyang Chen</b>, University of Oregon, United States</li>
+          <li><b>Soumya Dutta</b>, Los Alamos National Laboratory, United States</li>
+          <li><b>Pascal Grosset</b>, Los Alamos National Laboratory, United States</li>
+          <li><b>Hanqi Guo</b>, Ohio State University, United States</li>
+          <li><b>Pu Jiao</b>, The University of Texas Rio Grande Valley, United States</li>
+          <li><b>Shaomeng Li</b>, National Center for Atmospheric Research, United States</li>
+          <li><b>Jesus Pulido</b>, Los Alamos National Laboratory, United States</li>
+          <li><b>Dingwen Tao</b>, University of Chinese Academy of Sciences (UCAS), China</li>
+          <li><b>Xiaodong Yu</b>, Stevens Institute of Technology, United States</li>
+          <li><b>Zhaorui Zhang</b>, The Hong Kong Polytechnic University, Hong Kong, China</li>
+          <li><b>Kai Zhao</b>, Florida State University, United States</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>Steering Committee</h2>
+        <ul>
+          <li><b>Sheng Di</b>, Argonne National Laboratory, United States</li>
+          <li><b>Xin Liang</b>, Oregon State University, United States</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="tab-pane" data-tab="invited">
+      <div class="card">
+        <h2>Invited Keynote</h2>
+        <div class="tbd-block">
+          <div class="big">To be determined</div>
+          <p>It is an IWBDR convention to invite a distinguished keynote speaker at every edition, drawn from national
+            laboratories, leading research universities, and industry. For IWBDR-6 we will invite one distinguished
+            keynote speaker; the invitee is to be determined and will be confirmed ahead of the workshop. Check back
+            closer to <b>Dec. 14–17, 2026</b>.</p>
+        </div>
+        <p>Past editions have featured keynote speakers including Dr. Bill Spotz (DOE/ASCR), Dr. Franck Cappello
+          (Argonne National Laboratory), Dr. Feng Zhang (Renmin University), Dr. Benben Liu (LSCM), and Dr. Zhuoran Ji
+          (Shandong University).</p>
+      </div>
+    </section>
+
+    <section class="tab-pane" data-tab="past">
+      <div class="card">
+        <h2>Past Events</h2>
+        <p>IWBDR has been held annually in conjunction with the IEEE International Conference on Big Data. Each
+          edition's website is linked below.</p>
+        <ul>
+          <li><b><a href="https://iwbdr.github.io/iwbdr20/" target="_blank" rel="noopener">IWBDR-1</a></b> (IEEE BigData
+            2020)<br>
+            When: December 10, 2020 (Thursday) • Where: Virtual</li>
+          <li><b><a href="https://iwbdr.github.io/iwbdr21/" target="_blank" rel="noopener">IWBDR-2</a></b> (IEEE BigData
+            2021)<br>
+            When: December 17, 2021 • Where: Virtual</li>
+          <li><b><a href="https://iwbdr.github.io/iwbdr22/" target="_blank" rel="noopener">IWBDR-3</a></b> (IEEE BigData
+            2022)<br>
+            When: December 18, 2022 • Where: Osaka, Japan</li>
+          <li><b><a href="https://iwbdr.github.io/iwbdr23/" target="_blank" rel="noopener">IWBDR-4</a></b> (IEEE BigData
+            2023)<br>
+            When: December 15–18, 2023 • Where: Sorrento, Italy</li>
+          <li><b><a href="https://apecs-lab.github.io/iwbdr25/" target="_blank" rel="noopener">IWBDR-5</a></b> (IEEE
+            BigData 2025)<br>
+            When: December 8, 2025 • Where: Macau SAR, China</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="tab-pane" data-tab="chicago">
+      <div class="card">
+        <h2>Welcome to Phoenix</h2>
+        <p>IWBDR-6 is co-located with <b>IEEE BigData 2026</b> in Phoenix, Arizona: the fifth-largest city in the United
+          States, set in the Salt River Valley (the "Valley of the Sun") amid the saguaro-studded Sonoran Desert. Beyond
+          the conference, the region rewards a few extra days with desert landscapes, year-round sunshine, accessible
+          hiking, and a growing arts and dining scene.</p>
+        <p>The downtown core, where most conference activity centers, is served by Valley Metro Rail, and Phoenix Sky
+          Harbor International Airport sits just a few miles east of downtown.</p>
+      </div>
+
+      <div class="card">
+        <h2>Official tourism &amp; city info</h2>
+        <ul>
+          <li><a href="https://www.visitphoenix.com/" target="_blank" rel="noopener">Visit Phoenix ↗</a>: the city's
+            official destination marketing organization, with events, neighborhood guides, and hotel and transit info.
+          </li>
+          <li><a href="https://www.phoenix.gov/" target="_blank" rel="noopener">City of Phoenix ↗</a>: the official
+            municipal site.</li>
+          <li><a href="https://www.visitarizona.com/places/cities/phoenix/" target="_blank" rel="noopener">Visit
+              Arizona: Phoenix ↗</a>: the state tourism board's Phoenix overview.</li>
+          <li><a href="https://www.valleymetro.org/" target="_blank" rel="noopener">Valley Metro ↗</a>: light rail and
+            buses across the metro area.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>If you have an extra day</h2>
+
+        <h3>Desert &amp; outdoors</h3>
+        <ul>
+          <li><a href="https://www.dbg.org/" target="_blank" rel="noopener">Desert Botanical Garden ↗</a>: a celebrated
+            collection of Sonoran Desert flora in Papago Park.</li>
+          <li><a href="https://www.phoenix.gov/parks/trails/locations/camelback-mountain" target="_blank"
+              rel="noopener">Camelback Mountain ↗</a>: the iconic, strenuous summit hike with panoramic valley views.
+          </li>
+          <li><a href="https://www.phoenix.gov/parks/trails/locations/south-mountain" target="_blank"
+              rel="noopener">South Mountain Park &amp; Preserve ↗</a>: one of the largest municipal parks in the
+            country, with miles of desert trails.</li>
+        </ul>
+
+        <h3>Museums &amp; culture</h3>
+        <ul>
+          <li><a href="https://heard.org/" target="_blank" rel="noopener">Heard Museum ↗</a>: a renowned collection of
+            American Indian art and history.</li>
+          <li><a href="https://www.phxart.org/" target="_blank" rel="noopener">Phoenix Art Museum ↗</a>: the largest art
+            museum in the Southwest.</li>
+          <li><a href="https://mim.org/" target="_blank" rel="noopener">Musical Instrument Museum (MIM) ↗</a>:
+            instruments and music from around the world.</li>
+        </ul>
+
+        <h3>Day trips &amp; neighborhoods</h3>
+        <p>Phoenix is associated with Sonoran hot dogs, Mexican and Southwestern cuisine, and a fast-growing craft food
+          scene. For a longer excursion, <a href="https://www.visitarizona.com/places/cities/sedona/" target="_blank"
+            rel="noopener">Sedona ↗</a> (red-rock country, roughly two hours north) and the <a
+            href="https://www.nps.gov/grca/index.htm" target="_blank" rel="noopener">Grand Canyon ↗</a> (about three and
+          a half hours) are classic Arizona destinations, while <a href="https://www.experiencescottsdale.com/"
+            target="_blank" rel="noopener">Old Town Scottsdale ↗</a> next door is an easy evening out.</p>
+      </div>
+
+      <div class="card">
+        <h2>Getting there</h2>
+        <ul>
+          <li><a href="https://www.skyharbor.com/" target="_blank" rel="noopener">Phoenix Sky Harbor International
+              Airport (PHX) ↗</a>: the primary gateway, just east of downtown and connected to Valley Metro Rail via the
+            free PHX Sky Train.</li>
+          <li><a href="https://www.valleymetro.org/maps-schedules/rail" target="_blank" rel="noopener">Valley Metro Rail
+              ↗</a>: light rail linking the airport, downtown, Tempe, and Mesa.</li>
+          <li><a href="https://www.amtrak.com/stations/mar" target="_blank" rel="noopener">Amtrak (Maricopa, AZ) ↗</a>:
+            the nearest Amtrak station, served by the Sunset Limited with Thruway bus connections to downtown Phoenix.
+          </li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <p class="muted-note">The links above point to official tourism, municipal, and operator sites. IWBDR-6 is not
+          affiliated with these organizations; they are provided as a convenience for attendees.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================
+       Footer
+       ============================================================ -->
+  <footer class="footer">
+    <div class="container footer-row">
+      <p class="copyright">© 2026 IWBDR-6 Workshop</p>
+      <p class="photo-credit chi">Aerial photo: "<a
+          href="https://commons.wikimedia.org/wiki/File:Phoenix_AZ_Downtown_from_airplane.jpg" target="_blank"
+          rel="noopener">Aerial view of Phoenix</a>" by Melikamp / <a
+          href="https://commons.wikimedia.org/wiki/File:Phoenix_AZ_Downtown_from_airplane.jpg" target="_blank"
+          rel="noopener">Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by-sa/3.0" target="_blank"
+          rel="noopener">CC BY-SA 3.0</a></p>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       Submission portal modal
+       ============================================================ -->
+  <div class="modal-backdrop" id="submitModal">
+    <div class="modal">
+      <h3>Submit to IWBDR-6</h3>
+      <p>Go to the <a
+          href="https://wi-lab.com/cyberchair/2026/bigdata26/scripts/submit.php?subarea=S58&amp;undisplay_detail=1&amp;wh=/cyberchair/2026/bigdata26/scripts/ws_submit.php"
+          target="_blank" rel="noopener">IWBDR-6 submission portal</a>.</p>
+      <p><b>Note:</b> Make sure you are submitting to "The 6th International Workshop on BigData Reduction" as
+        indicated on the top-right corner.</p>
+      <p>Redirecting in <span id="submitCountdown">10</span>s...</p>
+      <div class="modal-actions">
+        <a class="btn" href="#" id="closeModal">Close</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      // Per-tab theme colors
+      var THEMES = {
+        home: '#c9171e',
+        cfp: '#009a00',
+        organization: '#2b66d3',
+        invited: '#1a1a1a',
+        past: '#7a5195',
+        chicago: '#8b1e3f'
+      };
+
+      var tabs = document.querySelectorAll('.nav .tab');
+      var panes = document.querySelectorAll('.tab-pane');
+      var layers = document.querySelectorAll('.echo-art .layer');
+      var root = document.documentElement;
+
+      // Safari tints its toolbar/UI from <meta name="theme-color">. Bright
+      // theme colors (e.g. a light blue) make a garish toolbar with awkward
+      // contrast; dark ones (the maroon) look like intentional chrome. So we
+      // derive a deep, Safari-friendly shade per tab: cap HSL lightness so
+      // every toolbar is dark enough for legible light UI text. Already-dark
+      // themes (maroon, near-black) pass through unchanged.
+      var themeMeta = document.querySelector('meta[name="theme-color"]');
+      function chromeColor(hex) {
+        var m = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex);
+        if (!m) return hex;
+        var r = parseInt(m[1], 16) / 255, g = parseInt(m[2], 16) / 255, b = parseInt(m[3], 16) / 255;
+        var max = Math.max(r, g, b), min = Math.min(r, g, b), l = (max + min) / 2, h = 0, s = 0, d = max - min;
+        if (d) {
+          s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+          if (max === r) h = (g - b) / d + (g < b ? 6 : 0);
+          else if (max === g) h = (b - r) / d + 2;
+          else h = (r - g) / d + 4;
+          h /= 6;
+        }
+        l = Math.min(l, 0.34); // cap lightness → always a deep, legible tint
+        function hue(p, q, t) { if (t < 0) t += 1; if (t > 1) t -= 1; if (t < 1 / 6) return p + (q - p) * 6 * t; if (t < 1 / 2) return q; if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6; return p; }
+        var rr, gg, bb;
+        if (!s) { rr = gg = bb = l; }
+        else { var q = l < 0.5 ? l * (1 + s) : l + s - l * s, p = 2 * l - q; rr = hue(p, q, h + 1 / 3); gg = hue(p, q, h); bb = hue(p, q, h - 1 / 3); }
+        function hx(v) { v = Math.round(v * 255); return (v < 16 ? '0' : '') + v.toString(16); }
+        return '#' + hx(rr) + hx(gg) + hx(bb);
+      }
+      function setThemeColor(hex) {
+        if (!themeMeta) { themeMeta = document.createElement('meta'); themeMeta.setAttribute('name', 'theme-color'); document.head.appendChild(themeMeta); }
+        themeMeta.setAttribute('content', chromeColor(hex || '#8b1e3f'));
+      }
+
+      function setTab(id) {
+        root.style.setProperty('--echo-theme', THEMES[id] || '#8b1e3f');
+        setThemeColor(THEMES[id]);
+        document.body.classList.toggle('chicago-active', id === 'chicago');
+        try { localStorage.setItem('echoTab', id); } catch (e) { }
+        tabs.forEach(function (t) {
+          t.classList.toggle('active', t.dataset.tab === id);
+        });
+        panes.forEach(function (p) {
+          // Re-trigger fade-in animation
+          if (p.dataset.tab === id) {
+            p.classList.remove('active');
+            // Force reflow so the animation restarts
+            void p.offsetWidth;
+            p.classList.add('active');
+          } else {
+            p.classList.remove('active');
+          }
+        });
+        layers.forEach(function (l) {
+          l.classList.toggle('active', l.dataset.tab === id);
+        });
+      }
+
+      tabs.forEach(function (t) {
+        t.addEventListener('click', function () { setTab(t.dataset.tab); });
+      });
+      // Expose so the Tweaks panel can jump to the Chicago tab on edit.
+      window.__echoSetTab = setTab;
+
+      // Restore the last-viewed tab so state (incl. the Chicago white footer)
+      // survives a refresh — not only on click.
+      try {
+        var savedTab = localStorage.getItem('echoTab');
+        if (savedTab && THEMES[savedTab]) { setTab(savedTab); }
+      } catch (e) { }
+
+      // Set the Safari toolbar tint for the initially-active tab on first load
+      // (when there is no saved tab, setTab above isn't called).
+      (function () {
+        var active = document.querySelector('.nav .tab.active');
+        setThemeColor(THEMES[active ? active.dataset.tab : 'home']);
+      })();
+
+      // CFP background lines — generated to fill full height
+      (function () {
+        var g = document.getElementById('cfp-lines');
+        if (!g) return;
+        var NS = 'http://www.w3.org/2000/svg';
+        for (var i = 0; i < 26; i++) {
+          var y = -20 + i * 40;
+          var w = 220 + ((i * 73) % 380);
+          var x = 60 + ((i * 47) % 200);
+          var op = 0.08 + (i % 3) * 0.02;
+
+          var l1 = document.createElementNS(NS, 'line');
+          l1.setAttribute('x1', x); l1.setAttribute('y1', y);
+          l1.setAttribute('x2', x + w); l1.setAttribute('y2', y);
+          l1.setAttribute('stroke-opacity', op.toFixed(3));
+          g.appendChild(l1);
+
+          var l2 = document.createElementNS(NS, 'line');
+          var rx = 920 + (x * 0.5);
+          l2.setAttribute('x1', rx); l2.setAttribute('y1', y + 20);
+          l2.setAttribute('x2', rx + w * 0.9); l2.setAttribute('y2', y + 20);
+          l2.setAttribute('stroke-opacity', (op * 0.85).toFixed(3));
+          g.appendChild(l2);
+        }
+      })();
+
+      // Modal wiring
+      var PORTAL_URL = 'https://wi-lab.com/cyberchair/2026/bigdata26/scripts/submit.php?subarea=S58&undisplay_detail=1&wh=/cyberchair/2026/bigdata26/scripts/ws_submit.php';
+      var modal = document.getElementById('submitModal');
+      var submitBtn = document.getElementById('submitBtn');
+      var closeModalBtn = document.getElementById('closeModal');
+      var countdownEl = document.getElementById('submitCountdown');
+      var countdownTimer = null;
+
+      function stopCountdown() {
+        if (countdownTimer) {
+          clearInterval(countdownTimer);
+          countdownTimer = null;
+        }
+      }
+
+      function closeModal() {
+        stopCountdown();
+        modal.classList.remove('open');
+      }
+
+      function startCountdown() {
+        var remaining = 10;
+        countdownEl.textContent = remaining;
+        stopCountdown();
+        countdownTimer = setInterval(function () {
+          remaining -= 1;
+          if (remaining <= 0) {
+            stopCountdown();
+            modal.classList.remove('open');
+            window.open(PORTAL_URL, '_blank', 'noopener');
+            return;
+          }
+          countdownEl.textContent = remaining;
+        }, 1000);
+      }
+
+      submitBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        modal.classList.add('open');
+        startCountdown();
+      });
+      closeModalBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        closeModal();
+      });
+      modal.addEventListener('click', function (e) {
+        if (e.target === modal) closeModal();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeModal();
+      });
+    })();
+  </script>
+
+  <!-- ============================================================
+       Tweaks panel — vanilla, dependency-free. Hidden in production;
+       appears only when the host posts __activate_edit_mode (the Tweaks
+       toolbar toggle). Persists via __edit_mode_set_keys; the host rewrites
+       the EDITMODE-BEGIN/END block below on disk.
+       ============================================================ -->
+  <script>
+    (function () {
+      var DEFAULTS = /*EDITMODE-BEGIN*/{
+        "skyTop": "#8b1e3f",
+        "photoHeight": 410,
+        "feather": 84,
+        "cardAlpha": 0.6,
+        "cardBlur": 12,
+        "anchor": "page",
+        "footerTop": 0,
+        "footerBottom": 0
+      }/*EDITMODE-END*/;
+
+      var state = Object.assign({}, DEFAULTS);
+      var root = document.documentElement;
+
+      function apply() {
+        root.style.setProperty('--chi-sky-top', state.skyTop);
+        root.style.setProperty('--chi-photo-h', state.photoHeight + 'px');
+        root.style.setProperty('--chi-feather', state.feather + 'px');
+        root.style.setProperty('--chi-card-alpha', String(state.cardAlpha));
+        root.style.setProperty('--chi-card-blur', state.cardBlur + 'px');
+        root.style.setProperty('--footer-pt', state.footerTop + 'px');
+        root.style.setProperty('--footer-pb', state.footerBottom + 'px');
+        document.body.classList.toggle('chi-anchor-page', state.anchor === 'page');
+      }
+      apply();
+
+      // Chicago-specific keys jump to the Chicago tab so the effect is visible;
+      // footer keys apply to all tabs, so they don't force a tab switch.
+      var CHI_KEYS = { skyTop: 1, photoHeight: 1, feather: 1, cardAlpha: 1, cardBlur: 1, anchor: 1 };
+
+      function setTweak(k, v) {
+        state[k] = v;
+        apply();
+        if (CHI_KEYS[k] && window.__echoSetTab) { window.__echoSetTab('chicago'); }
+        try { window.parent.postMessage({ type: '__edit_mode_set_keys', edits: (function () { var o = {}; o[k] = v; return o; })() }, '*'); } catch (e) { }
+      }
+
+      // ---- Build the panel ------------------------------------------------
+      var SKY_COLORS = ['#8b1e3f', '#41b6e6', '#1f6f8b', '#0b2545', '#c7600e'];
+      var panel = document.createElement('div');
+      panel.className = 'echo-tweaks';
+      panel.style.display = 'none';
+      panel.innerHTML =
+        '<header><h4>Tweaks · Chicago</h4><button class="x" title="Close">×</button></header>' +
+        '<div class="sect">Skyline backdrop</div>' +
+        '<div class="row"><label>Sky color</label><div class="swatches" data-k="skyTop"></div></div>' +
+        '<div class="row"><label>Skyline height <span class="val" data-v="photoHeight"></span></label>' +
+        '<input type="range" data-k="photoHeight" min="180" max="640" step="10"></div>' +
+        '<div class="row"><label>Seam feather <span class="val" data-v="feather"></span></label>' +
+        '<input type="range" data-k="feather" min="0" max="160" step="4"></div>' +
+        '<div class="row"><label>Anchor</label>' +
+        '<div class="seg" data-k="anchor">' +
+        '<button data-val="fixed">Viewport</button>' +
+        '<button data-val="page">Page bottom</button></div></div>' +
+        '<div class="sect">Content cards</div>' +
+        '<div class="row"><label>Card opacity <span class="val" data-v="cardAlpha"></span></label>' +
+        '<input type="range" data-k="cardAlpha" min="0.3" max="1" step="0.05"></div>' +
+        '<div class="row"><label>Card blur <span class="val" data-v="cardBlur"></span></label>' +
+        '<input type="range" data-k="cardBlur" min="0" max="30" step="1"></div>' +
+        '<div class="sect">Footer · © + credit (all tabs)</div>' +
+        '<div class="row"><label>Space above <span class="val" data-v="footerTop"></span></label>' +
+        '<input type="range" data-k="footerTop" min="0" max="96" step="2"></div>' +
+        '<div class="row"><label>Space below <span class="val" data-v="footerBottom"></span></label>' +
+        '<input type="range" data-k="footerBottom" min="0" max="96" step="2"></div>';
+      document.body.appendChild(panel);
+
+      // Swatches
+      var sw = panel.querySelector('.swatches[data-k="skyTop"]');
+      SKY_COLORS.forEach(function (c) {
+        var b = document.createElement('div');
+        b.className = 'swatch' + (c === state.skyTop ? ' sel' : '');
+        b.style.background = c; b.dataset.val = c; b.title = c;
+        b.addEventListener('click', function () {
+          setTweak('skyTop', c);
+          sw.querySelectorAll('.swatch').forEach(function (s) { s.classList.toggle('sel', s.dataset.val === c); });
+        });
+        sw.appendChild(b);
+      });
+
+      // Sliders
+      function fmt(k, v) {
+        if (k === 'cardAlpha') return Math.round(v * 100) + '%';
+        return v + 'px';
+      }
+      panel.querySelectorAll('input[type="range"]').forEach(function (inp) {
+        var k = inp.dataset.k;
+        inp.value = state[k];
+        var valEl = panel.querySelector('.val[data-v="' + k + '"]');
+        if (valEl) valEl.textContent = fmt(k, state[k]);
+        inp.addEventListener('input', function () {
+          var v = (k === 'cardAlpha') ? parseFloat(inp.value) : parseInt(inp.value, 10);
+          if (valEl) valEl.textContent = fmt(k, v);
+          setTweak(k, v);
+        });
+      });
+
+      // Segmented (anchor)
+      var seg = panel.querySelector('.seg[data-k="anchor"]');
+      function syncSeg() {
+        seg.querySelectorAll('button').forEach(function (b) { b.classList.toggle('sel', b.dataset.val === state.anchor); });
+      }
+      seg.querySelectorAll('button').forEach(function (b) {
+        b.addEventListener('click', function () { setTweak('anchor', b.dataset.val); syncSeg(); });
+      });
+      syncSeg();
+
+      // ---- Drag to reposition --------------------------------------------
+      var head = panel.querySelector('header');
+      head.addEventListener('mousedown', function (e) {
+        if (e.target.classList.contains('x')) return;
+        var r = panel.getBoundingClientRect();
+        var ox = e.clientX - r.left, oy = e.clientY - r.top;
+        head.classList.add('dragging');
+        function mv(ev) {
+          panel.style.left = (ev.clientX - ox) + 'px';
+          panel.style.top = (ev.clientY - oy) + 'px';
+          panel.style.right = 'auto';
+        }
+        function up() { head.classList.remove('dragging'); window.removeEventListener('mousemove', mv); window.removeEventListener('mouseup', up); }
+        window.addEventListener('mousemove', mv); window.addEventListener('mouseup', up);
+      });
+
+      // ---- Host protocol --------------------------------------------------
+      panel.querySelector('.x').addEventListener('click', function () {
+        panel.style.display = 'none';
+        try { window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*'); } catch (e) { }
+      });
+      window.addEventListener('message', function (e) {
+        var t = e && e.data && e.data.type;
+        if (t === '__activate_edit_mode') { panel.style.display = ''; if (window.__echoSetTab) window.__echoSetTab('chicago'); }
+        else if (t === '__deactivate_edit_mode') { panel.style.display = 'none'; }
+      });
+      try { window.parent.postMessage({ type: '__edit_mode_available' }, '*'); } catch (e) { }
+    })();
+  </script>
+
+</body>
+
+</html>
