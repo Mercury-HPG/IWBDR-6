@@ -327,7 +327,7 @@
       <button class="tab" data-tab="organization">Organization</button>
       <button class="tab" data-tab="invited">Invited Talk</button>
       <button class="tab" data-tab="past">Past Events</button>
-      <button class="tab" data-tab="chicago">Phoenix</button>
+      <button class="tab" data-tab="chicago" data-hash="phoenix">Phoenix</button>
       <a class="cta"
         href="https://wi-lab.com/cyberchair/2026/bigdata26/scripts/submit.php?subarea=S58&amp;undisplay_detail=1&amp;wh=/cyberchair/2026/bigdata26/scripts/ws_submit.php"
         id="submitBtn">Go to Submission</a>
@@ -725,16 +725,35 @@
         });
       }
 
+      // Deep-link each tab as [url]/#<hash>; data-hash overrides data-tab.
+      function hashOf(id) {
+        var t = document.querySelector('.nav .tab[data-tab="' + id + '"]');
+        return (t && t.dataset.hash) || id;
+      }
+      function tabOfHash() {
+        var h = location.hash.slice(1).toLowerCase();
+        for (var i = 0; i < tabs.length; i++) {
+          if (hashOf(tabs[i].dataset.tab) === h) return tabs[i].dataset.tab;
+        }
+        return null;
+      }
+
       tabs.forEach(function (t) {
-        t.addEventListener('click', function () { setTab(t.dataset.tab); });
+        t.addEventListener('click', function () {
+          setTab(t.dataset.tab);
+          var h = '#' + hashOf(t.dataset.tab);
+          if (location.hash !== h) history.pushState(null, '', h);
+        });
       });
+      window.addEventListener('popstate', function () { setTab(tabOfHash() || 'home'); });
+      window.addEventListener('hashchange', function () { var id = tabOfHash(); if (id) setTab(id); });
       // Expose so the Tweaks panel can jump to the Chicago tab on edit.
       window.__echoSetTab = setTab;
 
       // Restore the last-viewed tab so state (incl. the Chicago white footer)
       // survives a refresh — not only on click.
       try {
-        var savedTab = localStorage.getItem('echoTab');
+        var savedTab = tabOfHash() || localStorage.getItem('echoTab');
         if (savedTab && THEMES[savedTab]) { setTab(savedTab); }
       } catch (e) { }
 
