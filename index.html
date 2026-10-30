@@ -34,21 +34,17 @@
       --hero-banner: url("assets/Phoenix_skyline.jpg");
     }
 
-    .cal { width: 100%; border-collapse: collapse; table-layout: fixed; margin: 14px 0; font-size: .85rem; }
-    .cal caption { caption-side: top; text-align: left; font-weight: 600; padding-bottom: 6px; }
-    .cal th { color: var(--muted); font-weight: 600; font-size: .78rem; padding: 4px 0; text-align: center; }
-    .cal td { border: 1px solid #e3e3e8; height: 64px; vertical-align: top; padding: 4px 5px; }
-    .cal-we { background: #f7f7f9; }
-    .cal-d { display: block; color: var(--muted); font-size: .78rem; }
-    .cal-t { display: block; font-size: .72rem; line-height: 1.2; margin-top: 2px; }
-    .cal-ev { background: #8b1e3f; border-color: #8b1e3f; }
-    .cal-ev .cal-d, .cal-ev .cal-t { color: #fff; font-weight: 600; }
-    .cal-old .cal-t { color: #c9171e; opacity: .75; }
-    .cal-old del { text-decoration-style: double; }
-    @media (max-width: 560px) {
-      .cal td { height: 56px; padding: 3px; }
-      .cal-t { font-size: .62rem; }
+    .dates-wrap { display: flex; flex-wrap: wrap; gap: 8px 28px; align-items: flex-start; }
+    .dates-wrap ul { flex: 1 1 320px; margin: 0; }
+    .mini-cal { flex: 0 0 auto; width: 196px; table-layout: fixed; border-collapse: collapse; font-size: .8rem; margin: 0 auto; position: relative; }
+    .mini-cal caption { position: absolute; top: -1.7rem; left: 0; color: var(--echo-theme); font-weight: 700; font-size: 1.05rem; line-height: 1.2; }
+    .mini-cal th { color: var(--muted); font-weight: 600; font-size: .68rem; width: 28px; height: 28px; padding: 0; }
+    .mini-cal td { text-align: center; width: 28px; height: 28px; padding: 0; }
+    @media (max-width: 720px) {
+      .mini-cal { margin: 24px 0 0; }
     }
+    .mc-dot { display: inline-block; width: 24px; height: 24px; line-height: 24px; border-radius: 50%; background: var(--echo-theme); color: #fff; font-weight: 700; cursor: default; }
+
   </style>
 </head>
 
@@ -387,22 +383,25 @@
       </div>
       <div class="card">
         <h2>Important Dates</h2>
-        <ul>
-          <li>Full paper submission deadline: <b><del style="color:#c9171e; text-decoration-style: double;">October 30, 2026</del> November 6, 2026, 11:59 PM (AOE)</b> (Friday; extended)</li>
-          <li>Author notification: <b><del style="color:#c9171e; text-decoration-style: double;">November 13, 2026</del> November 17, 2026 (Tuesday)</b></li>
-          <li>Camera-ready deadline: <b><del style="color:#c9171e; text-decoration-style: double;">November 20, 2026</del> November 23, 2026 (Monday)</b></li>
-          <li>IWBDR-6 workshop: December 14–17, 2026 (the specific date is to be announced)</li>
-        </ul>
-        <table class="cal">
-          <caption>November 2026 (all deadlines AOE)</caption>
-          <thead><tr><th scope="col">Sun</th><th scope="col">Mon</th><th scope="col">Tue</th><th scope="col">Wed</th><th scope="col">Thu</th><th scope="col">Fri</th><th scope="col">Sat</th></tr></thead>
-          <tbody>
-            <tr><td class="cal-we"><span class="cal-d">1</span></td><td><span class="cal-d">2</span></td><td><span class="cal-d">3</span></td><td><span class="cal-d">4</span></td><td><span class="cal-d">5</span></td><td class="cal-ev"><span class="cal-d">6</span><span class="cal-t">Submission deadline</span></td><td class="cal-we"><span class="cal-d">7</span></td></tr>
-            <tr><td class="cal-we"><span class="cal-d">8</span></td><td><span class="cal-d">9</span></td><td><span class="cal-d">10</span></td><td><span class="cal-d">11</span></td><td><span class="cal-d">12</span></td><td class="cal-old"><span class="cal-d">13</span><span class="cal-t"><del>Notification</del></span></td><td class="cal-we"><span class="cal-d">14</span></td></tr>
-            <tr><td class="cal-we"><span class="cal-d">15</span></td><td><span class="cal-d">16</span></td><td class="cal-ev"><span class="cal-d">17</span><span class="cal-t">Author notification</span></td><td><span class="cal-d">18</span></td><td><span class="cal-d">19</span></td><td class="cal-old"><span class="cal-d">20</span><span class="cal-t"><del>Camera-ready</del></span></td><td class="cal-we"><span class="cal-d">21</span></td></tr>
-            <tr><td class="cal-we"><span class="cal-d">22</span></td><td class="cal-ev"><span class="cal-d">23</span><span class="cal-t">Camera-ready</span></td><td><span class="cal-d">24</span></td><td><span class="cal-d">25</span></td><td><span class="cal-d">26</span></td><td><span class="cal-d">27</span></td><td class="cal-we"><span class="cal-d">28</span></td></tr>
-          </tbody>
-        </table>
+        <div class="dates-wrap">
+          <ul>
+            <li>Full paper submission deadline: <b><del style="color:#c9171e; text-decoration-style: double;">October 30, 2026</del> November 6, 2026, 11:59 PM (AOE)</b> (Friday; extended)</li>
+            <li>Author notification: <b><del style="color:#c9171e; text-decoration-style: double;">November 13, 2026</del> November 17, 2026 (Tuesday)</b></li>
+            <li>Camera-ready deadline: <b>November 23, 2026 (Monday)</b></li>
+            <li>IWBDR-6 workshop: December 14–17, 2026 (the specific date is to be announced)</li>
+          </ul>
+          <table class="mini-cal" aria-label="November 2026 calendar; deadlines marked in red">
+            <caption>November</caption>
+            <thead><tr><th scope="col">S</th><th scope="col">M</th><th scope="col">T</th><th scope="col">W</th><th scope="col">T</th><th scope="col">F</th><th scope="col">S</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td><span class="mc-dot" title="Submission deadline">6</span></td><td>7</td></tr>
+              <tr><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td></tr>
+              <tr><td>15</td><td>16</td><td><span class="mc-dot" title="Author notification">17</span></td><td>18</td><td>19</td><td>20</td><td>21</td></tr>
+              <tr><td>22</td><td><span class="mc-dot" title="Camera-ready">23</span></td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td></tr>
+              <tr><td>29</td><td>30</td><td></td><td></td><td></td><td></td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
         <p class="muted-note">Dates are tentative and will be finalized in alignment with the IEEE BigData 2026 workshop
           track.</p>
       </div>
@@ -436,22 +435,25 @@
         </ul>
 
         <h3>Important Dates</h3>
-        <ul>
-          <li>Full paper submission deadline: <b><del style="color:#c9171e; text-decoration-style: double;">October 30, 2026</del> November 6, 2026, 11:59 PM (AOE)</b> (Friday; extended)</li>
-          <li>Author notification: <b><del style="color:#c9171e; text-decoration-style: double;">November 13, 2026</del> November 17, 2026 (Tuesday)</b></li>
-          <li>Camera-ready deadline: <b><del style="color:#c9171e; text-decoration-style: double;">November 20, 2026</del> November 23, 2026 (Monday)</b></li>
-          <li>IWBDR-6 workshop: December 14–17, 2026 (the specific date is to be announced)</li>
-        </ul>
-        <table class="cal">
-          <caption>November 2026 (all deadlines AOE)</caption>
-          <thead><tr><th scope="col">Sun</th><th scope="col">Mon</th><th scope="col">Tue</th><th scope="col">Wed</th><th scope="col">Thu</th><th scope="col">Fri</th><th scope="col">Sat</th></tr></thead>
-          <tbody>
-            <tr><td class="cal-we"><span class="cal-d">1</span></td><td><span class="cal-d">2</span></td><td><span class="cal-d">3</span></td><td><span class="cal-d">4</span></td><td><span class="cal-d">5</span></td><td class="cal-ev"><span class="cal-d">6</span><span class="cal-t">Submission deadline</span></td><td class="cal-we"><span class="cal-d">7</span></td></tr>
-            <tr><td class="cal-we"><span class="cal-d">8</span></td><td><span class="cal-d">9</span></td><td><span class="cal-d">10</span></td><td><span class="cal-d">11</span></td><td><span class="cal-d">12</span></td><td class="cal-old"><span class="cal-d">13</span><span class="cal-t"><del>Notification</del></span></td><td class="cal-we"><span class="cal-d">14</span></td></tr>
-            <tr><td class="cal-we"><span class="cal-d">15</span></td><td><span class="cal-d">16</span></td><td class="cal-ev"><span class="cal-d">17</span><span class="cal-t">Author notification</span></td><td><span class="cal-d">18</span></td><td><span class="cal-d">19</span></td><td class="cal-old"><span class="cal-d">20</span><span class="cal-t"><del>Camera-ready</del></span></td><td class="cal-we"><span class="cal-d">21</span></td></tr>
-            <tr><td class="cal-we"><span class="cal-d">22</span></td><td class="cal-ev"><span class="cal-d">23</span><span class="cal-t">Camera-ready</span></td><td><span class="cal-d">24</span></td><td><span class="cal-d">25</span></td><td><span class="cal-d">26</span></td><td><span class="cal-d">27</span></td><td class="cal-we"><span class="cal-d">28</span></td></tr>
-          </tbody>
-        </table>
+        <div class="dates-wrap">
+          <ul>
+            <li>Full paper submission deadline: <b><del style="color:#c9171e; text-decoration-style: double;">October 30, 2026</del> November 6, 2026, 11:59 PM (AOE)</b> (Friday; extended)</li>
+            <li>Author notification: <b><del style="color:#c9171e; text-decoration-style: double;">November 13, 2026</del> November 17, 2026 (Tuesday)</b></li>
+            <li>Camera-ready deadline: <b>November 23, 2026 (Monday)</b></li>
+            <li>IWBDR-6 workshop: December 14–17, 2026 (the specific date is to be announced)</li>
+          </ul>
+          <table class="mini-cal" aria-label="November 2026 calendar; deadlines marked in red">
+            <caption>November</caption>
+            <thead><tr><th scope="col">S</th><th scope="col">M</th><th scope="col">T</th><th scope="col">W</th><th scope="col">T</th><th scope="col">F</th><th scope="col">S</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td><span class="mc-dot" title="Submission deadline">6</span></td><td>7</td></tr>
+              <tr><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td></tr>
+              <tr><td>15</td><td>16</td><td><span class="mc-dot" title="Author notification">17</span></td><td>18</td><td>19</td><td>20</td><td>21</td></tr>
+              <tr><td>22</td><td><span class="mc-dot" title="Camera-ready">23</span></td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td></tr>
+              <tr><td>29</td><td>30</td><td></td><td></td><td></td><td></td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
         <p class="muted-note">Dates are tentative and will be finalized in alignment with the IEEE BigData 2026 workshop
           track.</p>
 
